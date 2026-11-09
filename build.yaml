@@ -1,16 +1,9 @@
-# This file describes the keymaps that will be built by the GitHub Actions CI.
+# Firmware de secours : l'ancienne disposition QWERTY simple du fork
+# (avant kanata-hummingbird), à utiliser avec Kanata sur l'ordinateur.
 
 include:
 
   # Quacken Zero + SparkFun RP2040
   - board: sparkfun_pro_micro_rp2040//zmk
     shield: quacken_zero
-    artifact-name: quacken_zero
-    snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_STUDIO=y
-
-  # Quacken Flex
-  - board: quacken_flex
-    artifact-name: quacken_flex
-    snippet: studio-rpc-usb-uart
-    cmake-args: -DCONFIG_ZMK_STUDIO=y
+    artifact-name: quacken_zero_secours_qwerty
