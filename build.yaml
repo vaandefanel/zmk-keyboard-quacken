@@ -1,5 +1,5 @@
 # Firmware de secours : l'ancienne disposition QWERTY simple du fork
-# (avant kanata-hummingbird), à utiliser avec Kanata sur l'ordinateur.
+# (branche first_config, celle qui tournait avant kanata-hummingbird), à utiliser avec Kanata.
 
 include:
 
