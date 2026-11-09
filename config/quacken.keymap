@@ -138,15 +138,16 @@
     //               q  s  e  n  f   l  r  t  i  y
     //               a  x  -  v  ·   ·  h  g  ,  u
     // Mods : S=Win D=Ctrl F=Alt / J=Alt K=Ctrl L=Win
-    // Pouces : Échap/Maj  Ctrl  Win | couche 1  Espace/Nav  Entrée/Symboles
-    // Haut droite : Retour arrière/Chiffres
+    // Pouces (positions du firmware first_config) :
+    //   Ctrl  Échap/Maj  Retour arrière/Chiffres | Espace/Nav  Entrée/Symboles  couche 1
+    // Haut droite : Win
     base {
       display-name = "Base";
       bindings = <
-        &kp TAB   &none &kp W         &kp E          &kp R         &kp T    &kp N  &kp U         &kp I          &star         &none    &lthpl NUM BSPC
-        &kp ESC   &kp Q &hrm LGUI S   &hrm LCTRL D   &hrm LALT F   &kp G    &kp H  &hrm LALT J   &hrm RCTRL K   &hrm RGUI L   &kp P    &kp ENTER
-        &kp LSHFT &kp A &kp X         &kp C          &kp V         &none    &none  &kp M         &kp COMMA      &kp DOT       &kp SEMI &kp RSHFT
-                             &kthp LSHFT ESC  &kp LCTRL  &kp LGUI      &mo QK1  &lttp NAV SPACE  &lthp SYM RET
+        &kp TAB   &none &kp W       &kp E        &kp R       &kp T   &kp N &kp U       &kp I        &star       &none    &kp LGUI
+        &kp ESC   &kp Q &hrm LGUI S &hrm LCTRL D &hrm LALT F &kp G   &kp H &hrm LALT J &hrm RCTRL K &hrm RGUI L &kp P    &kp ENTER
+        &kp LSHFT &kp A &kp X       &kp C        &kp V       &none   &none &kp M       &kp COMMA    &kp DOT     &kp SEMI &kp RSHFT
+                &kp LCTRL  &kthp LSHFT ESC  &lthpl NUM BSPC    &lttp NAV SPACE  &lthp SYM RET  &mo QK1
       >;
     };
 
@@ -154,10 +155,10 @@
     quacken_1 {
       display-name = "Quacken1";
       bindings = <
-        &trans     &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &trans
-        &kp LCTRL  &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp SQT
-        &trans     &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp ESC
-                                 &trans &trans &trans   &trans &trans &trans
+        &trans    &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &trans
+        &kp LCTRL &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp SQT
+        &trans    &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp ESC
+                &trans  &trans  &trans    &trans  &trans  &trans
       >;
     };
 
@@ -166,10 +167,10 @@
     one_dead_key {
       display-name = "1dk";
       bindings = <
-        &trans &none  &odk W &odk E &odk R &kp Z    &odk N &kp Y    &odk I     &osl ODK2 &none     &trans
-        &trans &odk Q &odk S &odk D &odk F &kp B    &odk H &odk J   &odk K     &odk L    &odk P    &trans
-        &trans &odk A &odk X &odk C &odk V &none    &none  &kp FSLH &odk COMMA &odk DOT  &odk SEMI &trans
-                             &trans &trans &trans   &trans &odk SPACE &trans
+        &trans &none  &odk W &odk E &odk R &kp Z   &odk N &kp Y    &odk I     &osl ODK2 &none     &trans
+        &trans &odk Q &odk S &odk D &odk F &kp B   &odk H &odk J   &odk K     &odk L    &odk P    &trans
+        &trans &odk A &odk X &odk C &odk V &none   &none  &kp FSLH &odk COMMA &odk DOT  &odk SEMI &trans
+                &trans  &trans  &trans    &odk SPACE  &trans  &trans
       >;
     };
 
@@ -181,19 +182,19 @@
         &trans &none  &ddk W &ddk E &ddk R &odk Z   &ddk N &odk Y    &ddk I     &ddk O   &none     &trans
         &trans &ddk Q &ddk S &ddk D &ddk F &odk K   &ddk H &ddk J    &ddk K     &ddk L   &ddk P    &trans
         &trans &ddk A &ddk X &ddk C &ddk V &none    &none  &odk FSLH &ddk COMMA &ddk DOT &ddk SEMI &trans
-                             &trans &trans &trans   &trans &ddk SPACE &trans
+                &trans  &trans  &trans    &ddk SPACE  &trans  &trans
       >;
     };
 
     // Symboles : couche AltGr d’Ergo-L, positions adaptées Hummingbird.
-    // Pouces : F1–F12 | Suppr/Chiffres (haut droite), AltGr+Espace
+    // Pouces : F1–F12 (gauche central), Suppr/Chiffres (gauche intérieur) | AltGr+Espace
     symbols {
       display-name = "Symbols";
       bindings = <
-        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)    &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &lthpl NUM DEL
-        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)    &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
-        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none        &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
-                                   &mo FUN2  &trans    &trans       &trans    &kp RA(SPACE) &trans
+        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)   &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &trans
+        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)   &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
+        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none       &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
+                &trans  &mo FUN2  &lthpl NUM DEL    &kp RA(SPACE)  &trans  &trans
       >;
     };
 
@@ -205,7 +206,7 @@
         &trans &none      &kp LS(N2) &kp LS(N3) &kp LS(N4) &kp LS(N5)   &kp LS(N6) &kp LS(N7) &kp LS(N8) &kp LS(N9) &none      &trans
         &trans &kp LS(N1) &kp N2     &kp N3     &kp N4     &kp N5       &kp N6     &kp N7     &kp N8     &kp N9     &kp LS(N0) &trans
         &trans &kp N1     &odk N2    &odk N3    &odk N4    &odk N5      &none      &kp RA(K)  &kp DOT    &kp N      &kp N0     &trans
-                                     &trans     &trans     &trans       &trans     &kp LS(SPACE) &mo SYM2
+                &trans  &trans  &trans    &kp LS(SPACE)  &mo SYM2  &trans
       >;
     };
 
@@ -214,24 +215,24 @@
     symbols_from_numrow {
       display-name = "Symbols2";
       bindings = <
-        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)    &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &lthpl NUM DEL
-        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)    &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
-        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none        &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
-                                   &mo FUN2  &trans    &trans       &trans    &kp RA(SPACE) &trans
+        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)   &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &trans
+        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)   &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
+        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none       &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
+                &trans  &mo FUN2  &lthpl NUM DEL    &kp RA(SPACE)  &trans  &trans
       >;
     };
 
     // Navigation Vim (Espace maintenu) :
     // gauche : pavé numérique (verrouillé), Ctrl+W, Précédent/Suivant, Ctrl+A S Z X C V, Tab/Maj+Tab
     // droite : flèches HJKL, Début/PgSuiv/PgPréc/Fin, molette ; F1–F12 sur « ; »
-    // Pouce droit extérieur : Échap
+    // Pouce droit central : Échap
     navigation {
       display-name = "Nav";
       bindings = <
-        &trans &to PAD    &kp LC(T)  &kp C_AC_BACK &kp C_AC_FORWARD &none    &kp HOME       &kp PG_DN      &kp PG_UP    &kp END         &none    &trans
-        &trans &kp LC(A)  &kp LC(S)  &kp LS(TAB)   &kp TAB          &none    &kp LEFT       &kp DOWN       &kp UP       &kp RIGHT       &mo FUN  &trans
-        &trans &kp LC(Z)  &kp LC(X)  &kp LC(W)     &kp LC(V)        &none    &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none    &trans
-                                     &none         &trans           &trans   &trans         &trans         &kp ESC
+        &trans &to PAD   &kp LC(T) &kp C_AC_BACK &kp C_AC_FORWARD &none   &kp HOME       &kp PG_DN      &kp PG_UP    &kp END         &none   &trans
+        &trans &kp LC(A) &kp LC(S) &kp LS(TAB)   &kp TAB          &none   &kp LEFT       &kp DOWN       &kp UP       &kp RIGHT       &mo FUN &trans
+        &trans &kp LC(Z) &kp LC(X) &kp LC(W)     &kp LC(V)        &none   &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none   &trans
+                &trans  &none  &trans    &trans  &kp ESC  &trans
       >;
     };
 
@@ -239,21 +240,23 @@
     funpad {
       display-name = "Fn";
       bindings = <
-        &trans &kp F1 &kp F2  &kp F3  &kp F4  &none    &none &none     &none    &none    &none  &trans
-        &trans &kp F5 &kp F6  &kp F7  &kp F8  &none    &none &kp LCTRL &kp LALT &kp LGUI &trans &trans
-        &trans &kp F9 &kp F10 &kp F11 &kp F12 &none    &none &none     &none    &none    &none  &trans
-                              &trans  &trans  &trans   &trans &trans &trans
+        &trans &kp F1 &kp F2  &kp F3  &kp F4  &none   &none &none     &none    &none    &none  &trans
+        &trans &kp F5 &kp F6  &kp F7  &kp F8  &none   &none &kp LCTRL &kp LALT &kp LGUI &trans &trans
+        &trans &kp F9 &kp F10 &kp F11 &kp F12 &none   &none &none     &none    &none    &none  &trans
+                &trans  &trans  &trans    &trans  &trans  &trans
       >;
     };
 
-    // F1–F12 depuis les symboles (pouce gauche extérieur).
+    // F1–F12 depuis les symboles (pouce gauche central).
+    // En haut à gauche : redémarrage en mode installation du firmware (&bootloader),
+    // soit Entrée/Symboles + pouce gauche central + touche en haut à gauche.
     funpad_custom {
       display-name = "Fn2";
       bindings = <
-        &trans &none   &none  &none  &none  &none     &none  &none  &none  &none  &none   &none
-        &trans &kp F11 &kp F2 &kp F3 &kp F4 &kp F5    &kp F6 &kp F7 &kp F8 &kp F9 &kp F12 &trans
-        &trans &kp F1  &none  &none  &none  &none     &none  &none  &none  &none  &kp F10 &trans
-                              &trans &trans &trans    &trans &trans &trans
+        &trans &bootloader &none &none &none &none  &none  &none  &none  &none  &none   &trans
+        &trans &kp F11 &kp F2 &kp F3 &kp F4 &kp F5   &kp F6 &kp F7 &kp F8 &kp F9 &kp F12 &trans
+        &trans &kp F1  &none  &none  &none  &none    &none  &none  &none  &none  &kp F10 &trans
+                &trans  &trans  &none    &trans  &trans  &trans
       >;
     };
 
@@ -261,10 +264,10 @@
     numpad {
       display-name = "NumPad";
       bindings = <
-        &trans &none &kp HOME &kp UP   &kp END   &kp PG_UP    &kp RA(L) &kp N7 &kp N8 &kp N9 &kp TAB &kp BSPC
-        &trans &none &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN    &kp RA(K) &kp N4 &kp N5 &kp N6 &kp N0  &trans
-        &trans &none &none    &none    &none     &none        &kp DOT   &kp N1 &kp N2 &kp N3 &kp N   &trans
-                              &to BASE &trans    &trans       &trans    &kp LS(SPACE) &to BASE
+        &trans &none &kp HOME &kp UP   &kp END   &kp PG_UP   &kp RA(L) &kp N7 &kp N8 &kp N9 &kp TAB &trans
+        &trans &none &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN   &kp RA(K) &kp N4 &kp N5 &kp N6 &kp N0  &trans
+        &trans &none &none    &none    &none     &none       &kp DOT   &kp N1 &kp N2 &kp N3 &kp N   &trans
+                &trans  &to BASE  &kp BSPC    &kp LS(SPACE)  &to BASE  &trans
       >;
     };
   };
