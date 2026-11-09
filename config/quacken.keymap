@@ -1,1 +1,271 @@
-#include <aekeynox/selenium.keymap>
+/*
+ * Quacken Zero — transposition fidèle de la configuration Kanata
+ * (Arsenik : home-row mods + layer-taps, variante Hummingbird, Ergo-L sur l’hôte).
+ *
+ * L’ordinateur doit utiliser la disposition Ergo-L : le clavier envoie des
+ * codes QWERTY, c’est Ergo-L (côté système) qui en fait des lettres.
+ * Les commentaires de chaque couche donnent le résultat en Ergo-L.
+ *
+ * Correspondance avec Kanata (C:\Program Files\Kanata) :
+ *   base_lt_hrm.kbd       -> BASE, ODK, ODK2
+ *   symbols_noop_num.kbd  -> SYM, NUM, FUN2
+ *   navigation_vim.kbd    -> NAV, PAD, FUN
+ *   ergol_pc.kbd          -> alias (raccourcis, chiffres, touche morte ★)
+ *
+ * Positions (42 touches) :
+ *    0  1  2  3  4  5    6  7  8  9 10 11
+ *   12 13 14 15 16 17   18 19 20 21 22 23
+ *   24 25 26 27 28 29   30 31 32 33 34 35
+ *            36 37 38   39 40 41
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 25
+#include <dt-bindings/zmk/pointing.h>
+
+#include <behaviors/dead-key.dtsi>  // module zmk-behavior-dead-key (via ækeynox)
+
+// Couches — l’ordre compte : une couche d’indice plus élevé masque les plus basses.
+#define BASE 0
+#define QK1  1   // ancienne couche 1 du Quacken (pouce droit intérieur)
+#define ODK  2   // après ★
+#define ODK2 3   // après ★★
+#define SYM  4   // symboles (AltGr d’Ergo-L)
+#define NUM  5   // rangée de chiffres
+#define SYM2 6   // copie de SYM, atteinte depuis NUM
+#define NAV  7   // navigation Vim
+#define FUN  8   // F1–F12 depuis NAV
+#define FUN2 9   // F1–F12 depuis SYM
+#define PAD  10  // pavé numérique verrouillé
+
+// Kanata : tap_timeout 200, hold_timeout 200, long_hold_timeout 250
+#define TAP_TIMEOUT 200
+
+/ {
+  behaviors {
+    // tap-hold-release 200 250 (home-row mods)
+    hrm: home_row_mod {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "balanced";
+      tapping-term-ms = <250>;
+      quick-tap-ms = <TAP_TIMEOUT>;
+      bindings = <&kp>, <&kp>;
+    };
+
+    // tap-hold-press 200 200 (Échap / Maj)
+    kthp: key_tap_hold_press {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "hold-preferred";
+      tapping-term-ms = <200>;
+      quick-tap-ms = <TAP_TIMEOUT>;
+      bindings = <&kp>, <&kp>;
+    };
+
+    // tap-hold-press 200 200 (Entrée / Symboles)
+    lthp: layer_tap_hold_press {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "hold-preferred";
+      tapping-term-ms = <200>;
+      quick-tap-ms = <TAP_TIMEOUT>;
+      bindings = <&mo>, <&kp>;
+    };
+
+    // tap-hold-press 200 250 (Retour arrière ou Suppr / Chiffres)
+    lthpl: layer_tap_hold_press_long {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "hold-preferred";
+      tapping-term-ms = <250>;
+      quick-tap-ms = <TAP_TIMEOUT>;
+      bindings = <&mo>, <&kp>;
+    };
+
+    // tap-hold 200 250 (Espace / Navigation)
+    lttp: layer_tap_hold {
+      compatible = "zmk,behavior-hold-tap";
+      #binding-cells = <2>;
+      flavor = "tap-preferred";
+      tapping-term-ms = <250>;
+      quick-tap-ms = <TAP_TIMEOUT>;
+      bindings = <&mo>, <&kp>;
+    };
+
+    // one-shot-release 2000 : la couche reste active jusqu’au relâchement de la
+    // touche suivante (au plus 2 s) ; Maj/Ctrl/Alt ne la consomment pas.
+    osl: one_shot_release_layer {
+      compatible = "zmk,behavior-sticky-key";
+      #binding-cells = <1>;
+      release-after-ms = <2000>;
+      bindings = <&mo>;
+      ignore-modifiers;
+    };
+
+    // Touche ★ : (fork @odklyr o (lsft rsft rctl lalt ralt))
+    // Sans modificateur : couche ODK. Avec l’un de ces modificateurs : la touche
+    // ★ d’Ergo-L avec le modificateur (Maj+★ = « ! »).
+    star: star_key {
+      compatible = "zmk,behavior-mod-morph";
+      #binding-cells = <0>;
+      bindings = <&osl ODK>, <&kp O>;
+      mods = <(MOD_LSFT|MOD_RSFT|MOD_RCTL|MOD_LALT|MOD_RALT)>;
+      keep-mods = <(MOD_LSFT|MOD_RSFT|MOD_RCTL|MOD_LALT|MOD_RALT)>;
+    };
+
+    // (macro @1dk X) : ★ sans modificateur, puis X avec les modificateurs tenus.
+    DEAD_KEY(odk, O)
+
+    // (macro @1dk @1dk X) : ★★ puis X.
+    // Limite : le premier ★ est envoyé avec les modificateurs tenus à cet
+    // instant (Maj tenue pendant ★★+lettre donnerait « ! » au lieu de ★).
+    ddk: double_dead_key {
+      compatible = "zmk,behavior-macro-one-param";
+      #binding-cells = <1>;
+      wait-ms = <0>;
+      tap-ms = <0>;
+      bindings = <&macro_tap &kp O>, <&macro_param_1to1>, <&macro_tap &odk MACRO_PLACEHOLDER>;
+    };
+  };
+
+  keymap {
+    compatible = "zmk,keymap";
+
+    // Ergo-L :      ·  c  o  p  w   .  m  d  ★  ·
+    //               q  s  e  n  f   l  r  t  i  y
+    //               a  x  -  v  ·   ·  h  g  ,  u
+    // Mods : S=Win D=Ctrl F=Alt / J=Alt K=Ctrl L=Win
+    // Pouces : Échap/Maj  Ctrl  Win | couche 1  Espace/Nav  Entrée/Symboles
+    // Haut droite : Retour arrière/Chiffres
+    base {
+      display-name = "Base";
+      bindings = <
+        &kp TAB   &none &kp W         &kp E          &kp R         &kp T    &kp N  &kp U         &kp I          &star         &none    &lthpl NUM BSPC
+        &kp ESC   &kp Q &hrm LGUI S   &hrm LCTRL D   &hrm LALT F   &kp G    &kp H  &hrm LALT J   &hrm RCTRL K   &hrm RGUI L   &kp P    &kp ENTER
+        &kp LSHFT &kp A &kp X         &kp C          &kp V         &none    &none  &kp M         &kp COMMA      &kp DOT       &kp SEMI &kp RSHFT
+                             &kthp LSHFT ESC  &kp LCTRL  &kp LGUI      &mo QK1  &lttp NAV SPACE  &lthp SYM RET
+      >;
+    };
+
+    // Ancienne couche 1 du firmware Quacken, conservée telle quelle.
+    quacken_1 {
+      display-name = "Quacken1";
+      bindings = <
+        &trans     &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &trans
+        &kp LCTRL  &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp SQT
+        &trans     &trans &trans &trans &trans &trans   &trans &trans &trans &trans &trans &kp ESC
+                                 &trans &trans &trans   &trans &trans &trans
+      >;
+    };
+
+    // Après ★ (variante Hummingbird) : T=z  G=b  U=j  M=k, ★ = ★★ ;
+    // les autres touches donnent ★ + la lettre.
+    one_dead_key {
+      display-name = "1dk";
+      bindings = <
+        &trans &none  &odk W &odk E &odk R &kp Z    &odk N &kp Y    &odk I     &osl ODK2 &none     &trans
+        &trans &odk Q &odk S &odk D &odk F &kp B    &odk H &odk J   &odk K     &odk L    &odk P    &trans
+        &trans &odk A &odk X &odk C &odk V &none    &none  &kp FSLH &odk COMMA &odk DOT  &odk SEMI &trans
+                             &trans &trans &trans   &trans &odk SPACE &trans
+      >;
+    };
+
+    // Après ★★ : T=★z  U=★j  M=★k ; G = ★ + code K, comme l’alias dkb
+    // d’ergol_pc.kbd (probablement une coquille pour ★b) ; les autres donnent ★★ + la lettre.
+    double_dead_key {
+      display-name = "2dk";
+      bindings = <
+        &trans &none  &ddk W &ddk E &ddk R &odk Z   &ddk N &odk Y    &ddk I     &ddk O   &none     &trans
+        &trans &ddk Q &ddk S &ddk D &ddk F &odk K   &ddk H &ddk J    &ddk K     &ddk L   &ddk P    &trans
+        &trans &ddk A &ddk X &ddk C &ddk V &none    &none  &odk FSLH &ddk COMMA &ddk DOT &ddk SEMI &trans
+                             &trans &trans &trans   &trans &ddk SPACE &trans
+      >;
+    };
+
+    // Symboles : couche AltGr d’Ergo-L, positions adaptées Hummingbird.
+    // Pouces : F1–F12 | Suppr/Chiffres (haut droite), AltGr+Espace
+    symbols {
+      display-name = "Symbols";
+      bindings = <
+        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)    &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &lthpl NUM DEL
+        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)    &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
+        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none        &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
+                                   &mo FUN2  &trans    &trans       &trans    &kp RA(SPACE) &trans
+      >;
+    };
+
+    // Chiffres sur la rangée de repos, Maj+chiffre au-dessus, ★+chiffre en bas.
+    // Pouces : espace insécable fine (Maj+Espace) | Symboles
+    numrow {
+      display-name = "NumRow";
+      bindings = <
+        &trans &none      &kp LS(N2) &kp LS(N3) &kp LS(N4) &kp LS(N5)   &kp LS(N6) &kp LS(N7) &kp LS(N8) &kp LS(N9) &none      &trans
+        &trans &kp LS(N1) &kp N2     &kp N3     &kp N4     &kp N5       &kp N6     &kp N7     &kp N8     &kp N9     &kp LS(N0) &trans
+        &trans &kp N1     &odk N2    &odk N3    &odk N4    &odk N5      &none      &kp RA(K)  &kp DOT    &kp N      &kp N0     &trans
+                                     &trans     &trans     &trans       &trans     &kp LS(SPACE) &mo SYM2
+      >;
+    };
+
+    // Copie de « symbols » : dans Kanata, Symboles s’active aussi depuis NumRow,
+    // or dans ZMK une couche ne passe au-dessus que si son indice est plus grand.
+    symbols_from_numrow {
+      display-name = "Symbols2";
+      bindings = <
+        &trans &none     &kp RA(W) &kp RA(E) &kp RA(R) &kp RA(G)    &kp RA(N) &kp RA(U) &kp RA(I)     &kp RA(O)   &none        &lthpl NUM DEL
+        &trans &kp RA(Z) &kp RA(S) &kp RA(D) &kp RA(F) &kp RA(B)    &kp RA(H) &kp RA(J) &kp RA(K)     &kp RA(L)   &kp RA(P)    &trans
+        &trans &kp RA(A) &kp RA(X) &kp RA(C) &kp RA(V) &none        &none     &kp RA(M) &kp RA(COMMA) &kp RA(DOT) &kp RA(SEMI) &trans
+                                   &mo FUN2  &trans    &trans       &trans    &kp RA(SPACE) &trans
+      >;
+    };
+
+    // Navigation Vim (Espace maintenu) :
+    // gauche : pavé numérique (verrouillé), Ctrl+W, Précédent/Suivant, Ctrl+A S Z X C V, Tab/Maj+Tab
+    // droite : flèches HJKL, Début/PgSuiv/PgPréc/Fin, molette ; F1–F12 sur « ; »
+    // Pouce droit extérieur : Échap
+    navigation {
+      display-name = "Nav";
+      bindings = <
+        &trans &to PAD    &kp LC(T)  &kp C_AC_BACK &kp C_AC_FORWARD &none    &kp HOME       &kp PG_DN      &kp PG_UP    &kp END         &none    &trans
+        &trans &kp LC(A)  &kp LC(S)  &kp LS(TAB)   &kp TAB          &none    &kp LEFT       &kp DOWN       &kp UP       &kp RIGHT       &mo FUN  &trans
+        &trans &kp LC(Z)  &kp LC(X)  &kp LC(W)     &kp LC(V)        &none    &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &none    &trans
+                                     &none         &trans           &trans   &trans         &trans         &kp ESC
+      >;
+    };
+
+    // F1–F12 depuis la navigation, avec Ctrl/Alt/Win à droite.
+    funpad {
+      display-name = "Fn";
+      bindings = <
+        &trans &kp F1 &kp F2  &kp F3  &kp F4  &none    &none &none     &none    &none    &none  &trans
+        &trans &kp F5 &kp F6  &kp F7  &kp F8  &none    &none &kp LCTRL &kp LALT &kp LGUI &trans &trans
+        &trans &kp F9 &kp F10 &kp F11 &kp F12 &none    &none &none     &none    &none    &none  &trans
+                              &trans  &trans  &trans   &trans &trans &trans
+      >;
+    };
+
+    // F1–F12 depuis les symboles (pouce gauche extérieur).
+    funpad_custom {
+      display-name = "Fn2";
+      bindings = <
+        &trans &none   &none  &none  &none  &none     &none  &none  &none  &none  &none   &none
+        &trans &kp F11 &kp F2 &kp F3 &kp F4 &kp F5    &kp F6 &kp F7 &kp F8 &kp F9 &kp F12 &trans
+        &trans &kp F1  &none  &none  &none  &none     &none  &none  &none  &none  &kp F10 &trans
+                              &trans &trans &trans    &trans &trans &trans
+      >;
+    };
+
+    // Pavé numérique verrouillé (Nav + Q) ; retour à la base avec un pouce extérieur.
+    numpad {
+      display-name = "NumPad";
+      bindings = <
+        &trans &none &kp HOME &kp UP   &kp END   &kp PG_UP    &kp RA(L) &kp N7 &kp N8 &kp N9 &kp TAB &kp BSPC
+        &trans &none &kp LEFT &kp DOWN &kp RIGHT &kp PG_DN    &kp RA(K) &kp N4 &kp N5 &kp N6 &kp N0  &trans
+        &trans &none &none    &none    &none     &none        &kp DOT   &kp N1 &kp N2 &kp N3 &kp N   &trans
+                              &to BASE &trans    &trans       &trans    &kp LS(SPACE) &to BASE
+      >;
+    };
+  };
+};
